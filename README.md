@@ -78,3 +78,39 @@ If you are pulling this repo to look at the architecture:
 3.  The `.mmd` files can be re-compiled using `mermaid-cli` if you modify the logic.
 
 *Let's build the map.*
+
+
+
+
+## Future Implementation Details & Notes
+
+> *Technical decisions to be implemented during the Frontend/Logic phase.*
+
+### 1. Recursive Axiom Rendering
+* **Decision:** Nodes will not store the full history of their axioms.
+* **Implementation:** The Frontend Component (`MathNode`) must traverse the `parentId` chain upwards to construct the full list of axioms ("The System") for display.
+* **Reasoning:** Ensures Single Source of Truth. If a Root Axiom is edited, all descendants update automatically.
+
+### 2. The "Duplicate" Flagging Flow
+* **UI Logic:** When flagging a node as a duplicate, the user must provide the ID of the "Survivor Node."
+* **Data Mapping:**
+    * `targetNodeId`: The node to be deleted (The Zombie).
+    * `duplicateOfId`: The node to keep (The Survivor).
+* **Admin Action:** Admin confirms this relationship. The `targetNodeId` gets the `to_be_deleted` flag.
+
+### 3. Flags as "Issue Tracker"
+* **UI:** Verified (Green) nodes look clean. Contested (Yellow) nodes will display a list of "Open Flags" in a sidebar/modal.
+* **Purpose:** This serves as the "Comment Section" for disputes. It ensures the reason for the Yellow status is public.
+
+### 4. LaTeX Fix Storage
+* **Capacity:** The `suggestedFixLatex` field in the Flag schema is designed to hold entire blocks of proof text, not just snippets.
+* **Workflow:** Admins can "Accept" a flag to strictly swap the `node.displayLatex` or `theorem.proofLatex` with the suggestion. (We will award extra points to the flagger for this!)
+
+### 5. Duplicate Flagging Guardrails (The "One-Way Ticket" Rule)
+* **Risk:** The "Pending Queue" Deadlock. A user might flag "Node A is a duplicate of B," while another user flags "Node B is a duplicate of A." If both sit in the queue and the Admin approves the first (making A a Zombie), they might inadvertently approve the second later, making B a Zombie too. This creates a scenario where **both** A and B are Zombies.
+* **The Guardrail:** The restriction is based on the `duplicateOfId` field, not the `to_be_deleted` status.
+    * *Allowed:* Flagging a "Zombie" node (inherited status) is permitted. This is the primary mechanism for cleaning up child nodes and hence the parent node too (see "design/pdfs/logic-node-delete.pdf").
+    * *Blocked:* If a node *already* has a `duplicateOfId` set, the system rejects any new Duplicate Flag pointing to a *different* ID.
+* **The Insight Alert:** If a user (or Admin) tries to flag Node A -> Node C, but Node A is already a duplicate of Node B:
+    * The system blocks the action.
+    * The system alerts the Admin/User: *"Potential Multi-Duplication: Node A is already linked to B. Check if B and C are duplicates."* (This allows for multiple duplicated branches to be identified and cleaned up efficiently.)
