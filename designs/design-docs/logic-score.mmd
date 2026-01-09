@@ -9,7 +9,12 @@ graph TD
         Event_Fix["Flag Resolved: Fixed/Edited"]
         Event_False["Flag Resolved: False Alarm"]
         Event_FlagGray["Flag Resolved: Axiom Contradiction (to Gray)"]
-        Event_FlagDeprecate["Flag Resolved: Fatal Flaw (to Deleted)"]
+        Event_FlagDeprecate["Flag Resolved: Node Killed (to Deleted)"]
+        
+        %% --- NEW ADDITION START ---
+        Event_Merge["Flag Resolved: Axiom Merged (Duplicate)"]
+        Event_Iso["Flag Resolved: Node Isomorphic (Link)"]
+        %% --- NEW ADDITION END ---
     end
 
     subgraph Owner_Rewards ["Owner Rewards"]
@@ -28,6 +33,10 @@ graph TD
         Flag_Success[/"Flagger (Yellow): +1 (Fix Accepted)"/]
         Flag_Fail[/"Flagger (Yellow): -1 (False Alarm)"/]
         Flag_BigWin[/"Flagger (Yellow): +2 (Node Killed/Grayed)"/]
+        
+        %% --- NEW ADDITION START ---
+        Flag_Merge[/"Librarian Bonus: +1 (Merge/Link)"/]
+        %% --- NEW ADDITION END ---
     end
 
     %% -- Owner Rewards (Both Types) --
@@ -54,6 +63,11 @@ graph TD
     Event_FlagGray -->|"Found Contradiction"| Flag_BigWin
     Event_FlagDeprecate -->|"Found Fatal Flaw"| Flag_BigWin
     
+    %% --- NEW ADDITION START ---
+    Event_Merge -->|"Identified Duplicate"| Flag_Merge
+    Event_Iso -->|"Identified Isomorphism"| Flag_Merge
+    %% --- NEW ADDITION END ---
+    
     %% Styling
     style Owner_Creation fill:#ccffcc,stroke:#006400
     style Owner_Contrib fill:#ccffcc,stroke:#006400
@@ -62,6 +76,7 @@ graph TD
     style Vote_B_Success fill:#e1f5fe,stroke:#01579b
     style Flag_Success fill:#e1f5fe,stroke:#01579b
     style Flag_BigWin fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    style Flag_Merge fill:#e1f5fe,stroke:#01579b
     
     style Vote_G_Fail fill:#ffcccc,stroke:#b71c1c
     style Vote_B_Fail fill:#ffcccc,stroke:#b71c1c
