@@ -1,32 +1,85 @@
 /* src/index.css */
-@import 'reactflow/dist/style.css';
+/* src/index.css */
+@import 'katex/dist/katex.min.css';
 
-body {
+html, body, #root {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background-color: #1a1a1a; /* Dark mode background to make the tree pop */
-  color: white;
+  padding: 0;
+  height: 100%;
+  width: 100%;
 }
 
-/* The Container for the Universe */
 .mathverse-canvas {
+  /* This ensures the React Flow container fills the entire screen */
   width: 100vw;
   height: 100vh;
+  display: block;
 }
 
-/* --- THE ZOMBIE PROTOCOL ANIMATION --- */
-/* Referenced in graphAdapter.ts: 'pulse-yellow 2s infinite' */
+.math-display-area {
+  margin: 10px 0;
+  min-height: 1.5em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.math-display-area .katex {
+  font-size: 1.0rem;
+}
+
+/* The footer for voting/flags  */
+.math-node-stats {
+  font-size: 0.7rem;
+  margin-top: 8px;
+  padding-top: 5px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-around;
+  font-family: sans-serif;
+  font-weight: normal;
+}
+
+.stat-green { color: #006400; }
+.stat-black { color: #333; }
+
+
+.math-node-container {
+  padding: 10px;
+  border-radius: 16px;
+  width: 180px;
+  text-align: center;
+  background: white; /* Default */
+  border: 2px solid #333;
+  color: black;
+}
+
+/* Specific colors for our Logic Tree */
+.status-verified { background-color: #ccffcc !important; border-color: #006400; }
+.status-unverified { background-color: #ffcccc !important; border-color: #8b0000; }
+.status-deprecated { background-color: #ffff00 !important; border-color: #000; }
+.status-deadEnd { background-color: #eeeeee !important; border-color: #333; }
+
 @keyframes pulse-yellow {
-  0% {
-    box-shadow: 0 0 0 0 rgba(255, 255, 0, 0.7);
-    border-color: #ffff00;
+  0% { 
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.9); 
+    transform: scale(1);
   }
-  70% {
-    box-shadow: 0 0 0 10px rgba(255, 255, 0, 0);
-    border-color: #b8860b;
+  50% { 
+    box-shadow: 0 0 20px 10px rgba(255, 150, 0, 0.5); 
+    transform: scale(1.1); 
   }
-  100% {
-    box-shadow: 0 0 0 0 rgba(255, 255, 0, 0);
-    border-color: #ffff00;
+  100% { 
+    box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.3); 
+    transform: scale(1);
   }
+}
+
+/* 2. Target the specific status class */
+.status-deprecated {
+  background-color: #ffff11 !important;
+  border: 1px dashed #000 !important;
+  color: #000 !important;
+  animation: pulse-yellow 4.0s infinite !important;
+  z-index: 1000;
 }

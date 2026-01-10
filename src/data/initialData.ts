@@ -10,45 +10,45 @@ import type { Axiom, MathNode } from '../types';
 // 1. THE AXIOMS (Concepts)
 // ==========================================
 
-export const INITIAL_AXIOMS: Axiom[] = [
+export const initialAxioms: Axiom[] = [
   {
-    id: 'ax_comm',
+    id: 'axComm',
     canonicalName: 'Commutativity',
     aliases: ['Symmetric', 'Abelian'],
     defaultLatex: 'a \\cdot b = b \\cdot a',
-    authorId: 'system_admin',
+    authorId: 'systemAdmin',
     createdAt: Date.now(),
   },
   {
-    id: 'ax_assoc',
+    id: 'axAssoc',
     canonicalName: 'Associativity',
     aliases: ['Grouping'],
     defaultLatex: '(a \\cdot b) \\cdot c = a \\cdot (b \\cdot c)',
-    authorId: 'system_admin',
+    authorId: 'systemAdmin',
     createdAt: Date.now(),
   },
   {
-    id: 'ax_ident',
+    id: 'axIdent',
     canonicalName: 'Identity Element',
     aliases: ['Neutral Element', 'Unity'],
     defaultLatex: '\\exists e : a \\cdot e = a',
-    authorId: 'system_admin',
+    authorId: 'systemAdmin',
     createdAt: Date.now(),
   },
   {
-    id: 'ax_inv',
+    id: 'axInv',
     canonicalName: 'Inverse Element',
     aliases: ['Reversibility'],
     defaultLatex: '\\forall a, \\exists a^{-1} : a \\cdot a^{-1} = e',
-    authorId: 'system_admin',
+    authorId: 'systemAdmin',
     createdAt: Date.now(),
   },
   {
-    id: 'ax_dist',
+    id: 'axDist',
     canonicalName: 'Distributivity',
     aliases: [],
     defaultLatex: 'a \\cdot (b + c) = (a \\cdot b) + (a \\cdot c)',
-    authorId: 'system_admin',
+    authorId: 'systemAdmin',
     createdAt: Date.now(),
   },
 ];
@@ -57,28 +57,26 @@ export const INITIAL_AXIOMS: Axiom[] = [
 // 2. THE NODES (The Tree)
 // ==========================================
 
-export const INITIAL_NODES: MathNode[] = [
+export const initialNodes: MathNode[] = [
   // --- LEVEL 1: ROOTS ---
   {
-    id: 'node_root_comm',
+    id: 'nodeRootComm',
     parentId: null, // Root
-    authorId: 'system_admin',
-    axiomId: 'ax_comm',
+    authorId: 'systemAdmin',
+    axiomId: 'axComm',
     displayLatex: 'x + y = y + x', // Using additive notation
     status: 'unverified',
-    isomorphicToIds: [],
     toBeDeleted: false,
     stats: { greenVotes: 50, blackVotes: 1, yellowFlags: 0 },
     createdAt: Date.now(),
   },
   {
-    id: 'node_root_assoc',
+    id: 'nodeRootAssoc',
     parentId: null, // Root
-    authorId: 'system_admin',
-    axiomId: 'ax_assoc',
+    authorId: 'systemAdmin',
+    axiomId: 'axAssoc',
     displayLatex: '(x + y) + z = x + (y + z)',
     status: 'verified',
-    isomorphicToIds: [],
     toBeDeleted: false,
     stats: { greenVotes: 45, blackVotes: 0, yellowFlags: 0 },
     createdAt: Date.now(),
@@ -88,13 +86,12 @@ export const INITIAL_NODES: MathNode[] = [
   
   // Node A: Commutative + Associative (Foundation of Abelian Group)
   {
-    id: 'node_comm_assoc',
-    parentId: 'node_root_comm', // Child of Commutativity
-    authorId: 'user_contributor',
-    axiomId: 'ax_assoc', // Adds Associativity
+    id: 'nodeCommAssoc',
+    parentId: 'nodeRootComm', // Child of Commutativity
+    authorId: 'userContributor',
+    axiomId: 'axAssoc', // Adds Associativity
     displayLatex: '(x + y) + z = x + (y + z)',
     status: 'verified',
-    isomorphicToIds: ['node_assoc_comm'], // Links to Node B (Type 1 Iso)
     toBeDeleted: false,
     stats: { greenVotes: 20, blackVotes: 0, yellowFlags: 0 },
     createdAt: Date.now(),
@@ -102,13 +99,12 @@ export const INITIAL_NODES: MathNode[] = [
 
   // Node B: Associative + Commutative (Same logic, different path)
   {
-    id: 'node_assoc_comm',
-    parentId: 'node_root_assoc', // Child of Associativity
-    authorId: 'user_contributor',
-    axiomId: 'ax_comm', // Adds Commutativity
+    id: 'nodeAssocComm',
+    parentId: 'nodeRootAssoc', // Child of Associativity
+    authorId: 'userContributor',
+    axiomId: 'axComm', // Adds Commutativity
     displayLatex: 'x + y = y + x',
     status: 'verified',
-    isomorphicToIds: ['node_comm_assoc'], // Links to Node A (Type 1 Iso)
     toBeDeleted: false,
     stats: { greenVotes: 20, blackVotes: 0, yellowFlags: 0 },
     createdAt: Date.now(),
@@ -118,16 +114,15 @@ export const INITIAL_NODES: MathNode[] = [
   
   // Node C: A duplicate created by accident
   {
-    id: 'node_zombie_duplicate',
-    parentId: 'node_root_comm',
-    authorId: 'user_novice',
-    axiomId: 'ax_assoc',
-    displayLatex: 'Duplicate of Node A',
+    id: 'nodeZombieDuplicate',
+    parentId: 'nodeCommAssoc',
+    authorId: 'userNovice',
+    axiomId: 'axAssoc',
+    displayLatex: '\\text{Duplicate of Node A}',
     status: 'deprecated', // <--- FLASH YELLOW
-    isomorphicToIds: [],
     
     // The "One-Way Ticket" pointers
-    duplicateOfId: 'node_comm_assoc', // Survivor is Node A
+    duplicateOfId: 'nodeCommAssoc', // Survivor is Node A
     toBeDeleted: true,
     
     stats: { greenVotes: 2, blackVotes: 10, yellowFlags: 5 },
@@ -136,13 +131,12 @@ export const INITIAL_NODES: MathNode[] = [
   
   // Node D: The Child of the Zombie (Should also inherit Flash logic in UI)
   {
-    id: 'node_zombie_child',
-    parentId: 'node_zombie_duplicate',
-    authorId: 'user_novice',
-    axiomId: 'ax_ident',
-    displayLatex: 'x + 0 = x',
+    id: 'nodeZombieChild',
+    parentId: 'nodeZombieDuplicate',
+    authorId: 'userNovice',
+    axiomId: 'axIdent',
+    displayLatex: 'x \\cdot 0 = x',
     status: 'deprecated', // Inherited status
-    isomorphicToIds: [],
     duplicateOfId: undefined, // Hasn't been manually mapped yet
     toBeDeleted: true,        // Inherited flag
     stats: { greenVotes: 0, blackVotes: 0, yellowFlags: 0 },

@@ -6,18 +6,17 @@ export type NodeStatus =
   | 'unverified'
   | 'verified'
   | 'contested'
-  | 'dead_end'
+  | 'deadEnd'
   | 'deprecated';
 
 export type VoteType = 'green' | 'black';
 
 export type FlagType = 
-  | 'node_issue' 
-  | 'axiom_duplicate' 
-  | 'isomorphism' 
+  | 'nodeIssue' 
+  | 'axiomDuplicate'  
   | 'deprecation';
 
-export type FlagStatus = 'open' | 'resolved_fixed' | 'resolved_false_alarm' | 'resolved_killed';
+export type FlagStatus = 'open' | 'resolvedFixed' | 'resolvedFalseAlarm' | 'resolvedKilled';
 
 export interface UserProfile {
   uid: string;
@@ -48,7 +47,6 @@ export interface MathNode {
   axiomId: string;
   displayLatex: string;
   status: NodeStatus;
-  isomorphicToIds: string[]; 
   duplicateOfId?: string;
   toBeDeleted: boolean;
   stats: {

@@ -1,4 +1,3 @@
-/* src/App.tsx */
 import React, { useMemo } from 'react';
 import { 
   ReactFlow, 
@@ -7,26 +6,28 @@ import {
   MiniMap, 
   useNodesState, 
   useEdgesState, 
-  ConnectionMode 
 } from '@xyflow/react';
+
 import '@xyflow/react/dist/style.css'; 
 import './index.css';
 
-// Data & Utils
-import { INITIAL_NODES } from './data/initialData';
+// Components & Data
+import { MathNode } from './components/MathNode';
+import { initialNodes } from './data/initialData';
 import { nodesToGraph } from './utils/graphAdapter';
+import { Overlay } from './components/Overlay';
+import { COLORS } from './styles/theme';
 
-// 1. Move static config OUTSIDE the component to prevent re-renders
-const PRO_OPTIONS = { hideAttribution: true };
-const { nodes: initialNodes, edges: initialEdges } = nodesToGraph(INITIAL_NODES);
+
+// Alias output to avoid shadowing conflict
+const { nodes: nodes0, edges: edges0 } = nodesToGraph(initialNodes);
 
 const App: React.FC = () => {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [nodes, , onNodesChange] = useNodesState(nodes0);
+  const [edges, , onEdgesChange] = useEdgesState(edges0);
 
-  // 2. If you eventually add custom node types, define them here or memoize them
   const nodeTypes = useMemo(() => ({
-    // mathNode: MathNodeComponent, 
+    mathNode: MathNode, 
   }), []);
 
   return (
@@ -36,34 +37,16 @@ const App: React.FC = () => {
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        nodeTypes={nodeTypes} // Added this to satisfy the renderer
+        nodeTypes={nodeTypes}
         fitView
-        minZoom={0.1}
-        maxZoom={4}
-        connectionMode={ConnectionMode.Loose}
-        proOptions={PRO_OPTIONS}
       >
-        <Background gap={20} color="#444" />
+        <Background gap={20} color="#333" />
         <Controls />
         <MiniMap 
-          nodeColor={(node) => {
-             // Logic based on status defined in logic.mmd
-             switch(node.data?.status) {
-               case 'verified': return '#ccffcc';
-               case 'unverified': return '#ffcccc';
-               case 'deprecated': return '#ffff00';
-               default: return '#eee';
-             }
-          }}
+          nodeColor={(node) => COLORS[node.data?.status as keyof typeof COLORS]||'#eee'}
         />
       </ReactFlow>
-      
-      <div className="mathverse-overlay">
-        <h2>The Mathverse (Alpha)</h2>
-        <p>✅ Verified: Green</p>
-        <p>⚠️ Zombie (Deprecated): Flashing Yellow</p>
-        <p>🔵 Isomorphism: Dashed Blue Line</p>
-      </div>
+      <Overlay />
     </div>
   );
 };
