@@ -1,0 +1,26 @@
+.overlay {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  pointer-events: none;
+  box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+}
+
+.overlay h2 {
+  margin: 0 0 10px 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.legend p {
+  margin: 5px 0;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

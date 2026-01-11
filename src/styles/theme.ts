@@ -11,6 +11,6 @@ export const COLORS = {
 export const STATUS_MAP = {
   verified: { color: COLORS.verified, label: 'Verified' },
   unverified: { color: COLORS.unverified, label: 'Unverified' },
-  deprecated: { color: COLORS.deprecated, label: 'Zombie (Deprecated)' },
+  deprecated: { color: COLORS.deprecated, label: 'Duplicate Branch (Deprecated)' },
   deadEnd: { color: COLORS.deadEnd, label: 'Dead End' },
 };

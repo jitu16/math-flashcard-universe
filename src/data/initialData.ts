@@ -4,8 +4,7 @@
  * Includes examples of verified nodes, zombies (deprecated), and isomorphisms.
  */
 
-import type { Axiom, MathNode } from '../types';
-
+import type { Axiom, MathNode, Theorem } from '../types';
 // ==========================================
 // 1. THE AXIOMS (Concepts)
 // ==========================================
@@ -142,4 +141,24 @@ export const initialNodes: MathNode[] = [
     stats: { greenVotes: 0, blackVotes: 0, yellowFlags: 0 },
     createdAt: Date.now(),
   },
+];
+
+
+export const initialTheorems: Theorem[] = [
+  {
+    id: 'thm-1',
+    nodeId: 'nodeRootComm', // Root node (Commutativity)
+    statementLatex: 'x + 0 = 0 + x',
+    proofLatex: 'Direct application of the commutativity axiom where y = 0.',
+    authorId: 'systemAdmin',
+    createdAt: Date.now()
+  },
+  {
+    id: 'thm-2',
+    nodeId: 'nodeCommAssoc', // Child node
+    statementLatex: 'x + (y + z) = (z + y) + x',
+    proofLatex: 'Combine Associativity to group (y+z) then Commutativity to swap the order.',
+    authorId: 'userContributor',
+    createdAt: Date.now()
+  }
 ];
