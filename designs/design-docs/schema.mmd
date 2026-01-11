@@ -2,7 +2,106 @@ classDiagram
     class User {
         +String id PK
         +String email
-        +String role "Values: admin, contributor, voter"
+        +String role "Values: novice, citizen, admin" 
+        +Int creationReputation
+        +Int contributorReputation
+    }
+
+    class RootEnvironment {
+        +String id PK
+        +String name "e.g., 'Magma Structure'"
+        +Array~String~ sets "e.g., ['S']"
+        +Array~String~ operators "e.g., ['*']"
+        %% REMOVED: rootAxiomId. The Environment IS the foundation.
+    }
+
+    class Axiom {
+        +String id PK
+        +String canonicalName "e.g., 'Commutativity'"
+        +Array~String~ aliases "Tags/Synonyms: ['Abelian', 'Symmetric']"
+        +String defaultLatex "e.g., a \cdot b = b \cdot a"
+        +String authorId FK
+        +Timestamp createdAt
+    }
+    
+    note for Axiom "The 'Concept' Library.\nStores unique definitions."
+
+    class Node {
+        +String id PK
+        +String parentId FK
+        +String authorId FK
+        
+        +String axiomId FK "LOGIC: Points to Axiom (Null for Root Definition Node)"
+        +String displayLatex "VISUAL: The Notation Override"
+        
+        +String status "Values: unverified, verified, contested, deadEnd, deprecated"
+        
+        +String duplicateOfId "Pointer to the Survivor Node"
+        +Boolean toBeDeleted "Deprecation Flag"
+        
+        +Int voteCountGreen
+        +Int voteCountBlack
+        +Int flagCountYellow
+    }
+
+    class Vote {
+        +String id PK
+        +String targetId FK "Polymorphic: Points to Node OR TheoremNode" 
+        +String targetType "Values: node, theorem"
+        +String userId FK
+        +String type "Values: green, black"
+        +Timestamp timestamp
+    }
+    
+    class Flag {
+        +String id PK
+        +String type "Values: issue, duplicate"
+        
+        +String targetId FK "Polymorphic: Points to Node OR TheoremNode"
+        +String targetType "Values: node, theorem"
+        
+        +String reporterId FK
+        +String reason 
+        +String suggestedFixLatex 
+        
+        +String duplicateOfId "Points to Survivor"
+        +String status
+    }
+    
+    class TheoremNode {
+        +String id PK
+        +String nodeId FK "CONTEXT: The Structural Parent (Axiom Node)"
+        +String parentId FK "LOGIC: The Deductive Parent"
+        
+        +String statementLatex
+        +String proofLatex
+        +String authorId FK
+        
+        +String status "Values: unverified, verified, deprecated"
+        +String duplicateOfId "Pointer to Survivor Theorem"
+        +Boolean toBeDeleted "Triggers Yellow Flash"
+        
+        +Int voteCountGreen
+        +Int voteCountBlack
+    }
+
+    %% Relationships
+    User "1" -- "*" Node : creates
+    User "1" -- "*" Axiom : creates
+    User "1" -- "*" TheoremNode : creates
+    User "1" -- "*" Vote : casts
+    User "1" -- "*" Flag : reports
+    
+    Axiom "1" -- "*" Node : defines
+    
+    Node "1" -- "*" Node : branches (Structural Tree)
+    TheoremNode "1" -- "*" TheoremNode : derives (Deductive Tree)
+    
+    Node "1" -- "*" TheoremNode : contains (The Local Deductive Scope)classDiagram
+    class User {
+        +String id PK
+        +String email
+        +String role "Values: novice, citizen, admin" 
         +Int creationReputation
         +Int contributorReputation
     }
@@ -46,7 +145,7 @@ classDiagram
 
     class Vote {
         +String id PK
-        +String targetId FK "Polymorphic: Points to Node OR Theorem" 
+        +String targetId FK "Polymorphic: Points to Node OR TheoremNode" 
         +String targetType "Values: node, theorem"
         +String userId FK
         +String type "Values: green, black"
@@ -57,7 +156,7 @@ classDiagram
         +String id PK
         +String type "Values: issue, duplicate"
         
-        +String targetId FK "Polymorphic: Points to Node OR Theorem"
+        +String targetId FK "Polymorphic: Points to Node OR TheoremNode"
         +String targetType "Values: node, theorem"
         
         +String reporterId FK
@@ -68,7 +167,7 @@ classDiagram
         +String status
     }
     
-    class Theorem {
+    class TheoremNode {
         +String id PK
         +String nodeId FK "CONTEXT: The Structural Parent (Axiom Node)"
         +String parentId FK "LOGIC: The Deductive Parent (Previous Theorem)"
@@ -88,7 +187,7 @@ classDiagram
     %% Relationships
     User "1" -- "*" Node : creates
     User "1" -- "*" Axiom : creates
-    User "1" -- "*" Theorem : creates
+    User "1" -- "*" TheoremNode : creates
     User "1" -- "*" Vote : casts
     User "1" -- "*" Flag : reports
     
@@ -96,7 +195,7 @@ classDiagram
     
     %% The Fractal Structure
     Node "1" -- "*" Node : branches (Structural Tree)
-    Theorem "1" -- "*" Theorem : derives (Deductive Tree)
+    TheoremNode "1" -- "*" TheoremNode : derives (Deductive Tree)
     
     %% Contextual Linking
-    Node "1" -- "*" Theorem : contains (The Local)
+    Node "1" -- "*" TheoremNode : contains (The Local)
