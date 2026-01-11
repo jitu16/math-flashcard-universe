@@ -1,45 +1,35 @@
 graph TD
-    subgraph Tiers ["The Trust Ladder"]
-        Visitor[/"Tier 0: Visitor<br/>(Read Only)"/]
-        Novice[/"Tier 1: Novice<br/>(Verified Email)"/]
-        Citizen[/"Tier 2: Citizen<br/>(Reputation > 50)"/]
-        Admin[/"Tier 3: Librarian/Admin<br/>(Hand-Picked)"/]
+    User((User))
+    
+    subgraph Client ["Client Side (Vite/React)"]
+        App["App Controller"]
+        
+        subgraph Engines ["Graph Engines (React Flow)"]
+            %% EXPLICIT NAMING
+            StructuralEngine["Algebraic Structural Engine<br/>(Nodes: Axiom Systems)"]
+            DeductiveEngine["Theorem Deductive Engine<br/>(Nodes: Theorem Proofs)"]
+        end
+        
+        Logic["Lineage Utility<br/>(Fetch Parents)"]
+        Math["KaTeX Renderer"]
     end
 
-    subgraph Actions_Deductive ["Deductive Domain (Theorems)"]
-        Act_DraftThm["Draft Theorem"]
-        Act_VerifyThm["Verify Theorem"]
-        Act_FlagThm["Flag Duplicate"]
+    subgraph Data ["Firebase"]
+        DB_Axioms[("Collection: StructureNodes")]
+        DB_Theorems[("Collection: TheoremNodes")]
     end
 
-    subgraph Actions_Structural ["Structural Domain (Axioms)"]
-        Act_DraftAx["Draft Axiom Node"]
-        Act_VerifyAx["Verify Axiom Node"]
-        Act_DeleteAx["Deprecation Protocol"]
-        Act_Lock["Lock Node"]
-    end
-
-    %% -- Visitor --
-    Visitor -.->|"Cannot Edit"| Actions_Deductive
+    %% Flow
+    User --> App
+    %% Explicit Navigation Labels
+    App --"View: Algebraic Structure"--> StructuralEngine
+    App --"View: Theorem Deduction"--> DeductiveEngine
     
-    %% -- Novice --
-    Novice -->|"Can Draft (Ghost Mode)"| Act_DraftThm
-    Novice -->|"Can Draft (Ghost Mode)"| Act_DraftAx
+    StructuralEngine --"Select System"--> DeductiveEngine
     
-    %% -- Citizen --
-    Citizen -->|"Instant Publish (Red)"| Act_DraftThm
-    Citizen -->|"Instant Publish (Red)"| Act_DraftAx
-    Citizen -->|"Vote (Weight: 5)"| Act_VerifyThm
-    Citizen -->|"Vote (Weight: 5)"| Act_VerifyAx
-    Citizen -->|"Flag"| Act_FlagThm
-
-    %% -- Admin --
-    Admin -->|"Instant Verify"| Act_VerifyThm
-    Admin -->|"Instant Verify"| Act_VerifyAx
-    Admin -->|"Force Merge"| Act_DeleteAx
-    Admin -->|"System Lock"| Act_Lock
+    DeductiveEngine --> Logic
+    DeductiveEngine --> Math
+    StructuralEngine --> Math
     
-    %% Styling
-    style Admin fill:#ccffcc,stroke:#006400,stroke-width:2px
-    style Citizen fill:#e1f5fe,stroke:#01579b
-    style Novice fill:#ffffcc,stroke:#fbc02d
+    StructuralEngine <--> DB_Axioms
+    DeductiveEngine <--> DB_Theorems

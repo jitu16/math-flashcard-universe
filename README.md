@@ -107,17 +107,19 @@ As the tree grows, users will inevitably rediscover the same mathematical struct
 ---
 
 ## 🛠 TEMPORARY: ALPHA SCAFFOLDING & NEXT STEPS
-> **Status:** Jan 11, 2026 - Visualization & Modularity Complete.
+> **Status:** Jan 11, 2026 - Architecture Finalized. Code Refactor Pending.
 > **Action:** This section to be deleted once transition to Phase 2 (Interactivity) is complete.
 
-### 1. Current Implementation Audit
-* **`AlgebraicStructureExplorer.tsx`**: Modularized the generic canvas logic to support both Structural and Deductive trees.
-* **`index.css`**: Migrated to CSS Modules (`Overlay.module.css`, `Flashcard.module.css`) to prevent style collisions in the Fractal UI.
-* **Lineage Logic**: Updated `lineage.ts` to fetch and stack theorems recursively.
+### 1. Architecture Audit
+* **Design Files:** All Mermaid diagrams updated to reflect "Fractal Architecture" and "Rigorous Terminology" (removing sci-fi metaphors).
+* **CSS Strategy:** Modular CSS (`*.module.css`) adopted for clean separation of UI domains.
 
-### 2. Logic Redaction
-* **Isomorphism:** This term has been redacted. All structural overlaps are now handled strictly under the **Duplication/Deprecation** workflow.
-
-### 3. Tomorrow's Sprint
-* **Theorem Node Schema:** Update TypeScript interfaces to match the new Fractal `Theorem` definition (adding `parentId`, `status`, `duplicateOfId`).
-* **The Workspace View:** Implementing the transition from "Click Node" -> "Open Theorem Tree Explorer."
+### 2. Immediate Coding Tasks (Tomorrow's Sprint)
+* **Step 1 (Strict Typing):** Update `types.ts`.
+    * Rename `Universe` $\to$ `RootEnvironment`.
+    * Upgrade `Theorem` to `TheoremNode` (adding `parentId`, `duplicateOfId`, `status` to support the tree structure).
+* **Step 2 (The Generic Engine):** Refactor `AlgebraicStructureExplorer.tsx` into a reusable `GenericGraphEngine.tsx` that accepts `nodes` and `edges` as props.
+* **Step 3 (The Domain Wrappers):** Create two new container components:
+    * `StructuralEngine.tsx` (Injects Axiom Data for the System Map).
+    * `DeductiveEngine.tsx` (Injects Theorem Data for the Proof Graph).
+* **Step 4 (Navigation):** Update `App.tsx` to manage the state transition from "Structural View" to "Deductive View" when a user clicks a node.

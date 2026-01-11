@@ -6,15 +6,13 @@ graph TD
         Admin[/"Tier 3: Librarian/Admin<br/>(Hand-Picked)"/]
     end
 
-    %% EXPLICIT NAMING: Theorem Deductive Domain
-    subgraph Actions_Deductive ["Theorem Deductive Domain"]
+    subgraph Actions_Micro ["Micro-Universe (Theorems)"]
         Act_DraftThm["Draft Theorem"]
         Act_VerifyThm["Verify Theorem"]
         Act_FlagThm["Flag Duplicate"]
     end
 
-    %% EXPLICIT NAMING: Algebraic Structural Domain
-    subgraph Actions_Structural ["Algebraic Structural Domain"]
+    subgraph Actions_Macro ["Macro-Universe (Axioms)"]
         Act_DraftAx["Draft Axiom Node"]
         Act_VerifyAx["Verify Axiom Node"]
         Act_DeleteAx["Zombie Protocol"]
@@ -22,7 +20,7 @@ graph TD
     end
 
     %% -- Visitor --
-    Visitor -.->|"Cannot Edit"| Actions_Deductive
+    Visitor -.->|"Cannot Edit"| Actions_Micro
     
     %% -- Novice --
     Novice -->|"Can Draft (Ghost Mode)"| Act_DraftThm
