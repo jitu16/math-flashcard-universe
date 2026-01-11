@@ -1,31 +1,31 @@
 graph TD
-    App["App Container"] --> MainCanvas["Main Canvas"]
+    User((User))
     
-    MainCanvas --> ReactFlow["React Flow Tree (Zoomable)"]
-    MainCanvas --> Overlay["Flashcard Overlay (Modal/Sidepanel)"]
-    
-    subgraph Flashcard ["Flashcard Component Layout"]
-        Overlay --> Header["Sticky Header<br/>(Node Name & New Axiom)"]
-        Overlay --> Body["Scrollable Body Area"]
-        
-        Body --> Inherited["Inherited Axioms<br/>(Collapsible Accordion)"]
-        Body --> ThmList["Theorem List"]
-        
-        ThmList --> ThmItem["Theorem Item"]
-        ThmItem --> Statement["LaTeX Statement"]
-        
-        %% The Fix: Explicitly stating it is conditional
-        ThmItem --> Controls["1. Proof Toggle (Always)<br/>2. Edit Button (Conditional)"]
-        
-        ThmItem --> Proof["Proof Body<br/>(Expands Inline)"]
+    subgraph StructuralLayer ["Layer 1: Structural Tree (Algebraic Systems)"]
+        SystemExplorer["System Explorer Canvas<br/>(Axiom Nodes)"]
+        SystemOverlay["Overlay: Legend & Metadata"]
     end
     
-    %% UX Rules
-    NoteUx[/"UX RULE 1: Context Preservation<br/>Opening a proof must push content down."/]
-    style NoteUx fill:#fff,stroke:#333,stroke-dasharray: 5 5
+    subgraph DeductiveLayer ["Layer 2: Deductive Graph (Local Proofs)"]
+        ProofCanvas["Deduction Canvas<br/>(Theorem Nodes)"]
+        
+        subgraph ContextPanel ["Premise Library (Context)"]
+            ActiveAxioms["Active Axioms (Definitions)"]
+            EstablishedTheorems["Prior Theorems (Lemmas)"]
+        end
+        
+        InferenceTools["Inference Tools<br/>(Create Implication)"]
+    end
     
-    NoteAuth[/"UX RULE 2: Conditional Rendering<br/>Edit/Flag buttons only appear<br/>if User has correct Role."/]
-    style NoteAuth fill:#e1f5fe,stroke:#01579b,stroke-dasharray: 5 5
+    %% Navigation Flow
+    User --> SystemExplorer
+    SystemExplorer --"Select System"--> ProofCanvas
     
-    Proof -.-> NoteUx
-    Controls -.-> NoteAuth
+    %% Logic Flow in Workspace
+    ActiveAxioms -.->|"Grounds Truth"| ProofCanvas
+    EstablishedTheorems --"Import as Lemma"--> ProofCanvas
+    InferenceTools --"Derive"--> ProofCanvas
+
+    %% Visual States
+    style StructuralLayer fill:#f9f9f9,stroke:#333
+    style DeductiveLayer fill:#e1f5fe,stroke:#01579b

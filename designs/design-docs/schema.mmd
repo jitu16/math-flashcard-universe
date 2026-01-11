@@ -7,7 +7,7 @@ classDiagram
         +Int contributorReputation
     }
 
-    class Universe {
+    class RootEnvironment {
         +String id PK
         +String name
         +Array~String~ sets "e.g., ['V', 'F']"
@@ -46,7 +46,8 @@ classDiagram
 
     class Vote {
         +String id PK
-        +String nodeId FK
+        +String targetId FK "Polymorphic: Points to Node OR Theorem" 
+        +String targetType "Values: node, theorem"
         +String userId FK
         +String type "Values: green, black"
         +Timestamp timestamp
@@ -54,32 +55,48 @@ classDiagram
     
     class Flag {
         +String id PK
-        +String type "Values: nodeIssue, axiomDuplicate, notationError, duplication"
+        +String type "Values: issue, duplicate"
         
-        +String targetNodeId FK "If flagging a Node"
-        +String targetAxiomId FK "If flagging an Axiom"
+        +String targetId FK "Polymorphic: Points to Node OR Theorem"
+        +String targetType "Values: node, theorem"
         
         +String reporterId FK
-        +String reason "e.g., Notation Divergence or Permutation"
-        +String suggestedFixLatex "For Node Typos"
+        +String reason 
+        +String suggestedFixLatex 
         
-        +String duplicateOfId "Points to Master Axiom (Merge) OR Survivor Node"
-        
+        +String duplicateOfId "Points to Survivor"
         +String status
     }
     
     class Theorem {
         +String id PK
-        +String nodeId FK
+        +String nodeId FK "CONTEXT: The Structural Parent (Axiom Node)"
+        +String parentId FK "LOGIC: The Deductive Parent (Previous Theorem)"
+        
         +String statementLatex
         +String proofLatex
+        +String authorId FK
+        
+        +String status "Values: unverified, verified, deprecated"
+        +String duplicateOfId "Pointer to Survivor Theorem (Zombie Logic)"
+        +Boolean toBeDeleted "Triggers Yellow Flash in Theorem Tree"
+        
+        +Int voteCountGreen
+        +Int voteCountBlack
     }
 
+    %% Relationships
     User "1" -- "*" Node : creates
     User "1" -- "*" Axiom : creates
+    User "1" -- "*" Theorem : creates
     User "1" -- "*" Vote : casts
     User "1" -- "*" Flag : reports
     
     Axiom "1" -- "*" Node : defines
-    Node "1" -- "*" Vote : has
-    Node "1" -- "*" Flag : has
+    
+    %% The Fractal Structure
+    Node "1" -- "*" Node : branches (Structural Tree)
+    Theorem "1" -- "*" Theorem : derives (Deductive Tree)
+    
+    %% Contextual Linking
+    Node "1" -- "*" Theorem : contains (The Local)

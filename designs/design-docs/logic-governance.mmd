@@ -6,21 +6,21 @@ graph TD
         Admin[/"Tier 3: Librarian/Admin<br/>(Hand-Picked)"/]
     end
 
-    subgraph Actions_Deductive ["Deductive Domain (Theorems)"]
+    subgraph Actions_Micro ["Micro-Universe (Theorems)"]
         Act_DraftThm["Draft Theorem"]
         Act_VerifyThm["Verify Theorem"]
         Act_FlagThm["Flag Duplicate"]
     end
 
-    subgraph Actions_Structural ["Structural Domain (Axioms)"]
+    subgraph Actions_Macro ["Macro-Universe (Axioms)"]
         Act_DraftAx["Draft Axiom Node"]
         Act_VerifyAx["Verify Axiom Node"]
-        Act_DeleteAx["Deprecation Protocol"]
+        Act_DeleteAx["Zombie Protocol"]
         Act_Lock["Lock Node"]
     end
 
     %% -- Visitor --
-    Visitor -.->|"Cannot Edit"| Actions_Deductive
+    Visitor -.->|"Cannot Edit"| Actions_Micro
     
     %% -- Novice --
     Novice -->|"Can Draft (Ghost Mode)"| Act_DraftThm
